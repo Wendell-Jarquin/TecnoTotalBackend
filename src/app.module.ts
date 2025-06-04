@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { MailerModule } from '@nestjs-modules/mailer';
 import { ClientesModule } from './modules/clientes/clientes.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -16,6 +17,20 @@ import { EquiposModule } from './modules/equipos/equipos.module';
 
 @Module({
   imports: [
+    // Configuración del mailer
+    MailerModule.forRoot({
+      transport: {
+        host: 'mail.wendelljarxd.com',
+        port: 465,
+        auth: {
+          user: 'tecnototal@wendelljarxd.com',
+          pass: '.m3)b~,P0ulF',
+        },
+      },
+      defaults: {
+        from: '"TecnoTotal" <no-reply@tecnototal.com>',
+      },
+    }),
     // Cargar variables de entorno
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({

@@ -23,4 +23,7 @@ export class CreateReparacionDto {
   @IsOptional()
   @IsDateString()
   fechaEntrega?: string;
+
+  @IsString()
+  emailCliente: string; // <-- Agrega este campo
 }

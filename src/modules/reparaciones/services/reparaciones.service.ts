@@ -7,7 +7,8 @@ import { CreateReparacionDto } from '../dto/reparaciones.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Reparacion } from '../entities/reparaciones.entity';
-import { User } from '../../../auth/entities/auth.entity'; // Asegúrate de importar la entidad User
+import { User } from '../../../auth/entities/auth.entity';
+import { MailerService } from '@nestjs-modules/mailer'; // Importa el MailerService
 
 @Injectable()
 export class ReparacionesService {
@@ -15,18 +16,41 @@ export class ReparacionesService {
     @InjectRepository(Reparacion)
     private readonly reparacionRepository: Repository<Reparacion>,
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>, // Agrega esta línea
+    private readonly userRepository: Repository<User>,
+    private readonly mailerService: MailerService, // Inyecta el MailerService
   ) {}
 
   async create(createReparacionDto: CreateReparacionDto) {
     try {
       const reparacion = this.reparacionRepository.create(createReparacionDto);
-      console.log('Reparación antes de guardar:', reparacion);
       await this.reparacionRepository.save(reparacion);
-      console.log('Reparación después de guardar:', reparacion);
+
+      // Usa el email y nombre del DTO para el correo
+      const emailCliente = createReparacionDto.emailCliente;
+      const nombreCliente = createReparacionDto.nombreCliente;
+
+      console.log('DTO recibido:', createReparacionDto);
+      console.log('Email a notificar:', createReparacionDto.emailCliente);
+
+      if (emailCliente) {
+        try {
+          await this.mailerService.sendMail({
+            to: emailCliente,
+            subject: 'Registro de reparación',
+            text: `Hola ${nombreCliente || 'cliente'}, tu equipo fue registrado correctamente. Te notificaremos los próximos avances.`,
+            html: `<p>Hola <b>${nombreCliente || 'cliente'}</b>, tu equipo fue registrado correctamente.<br>Te notificaremos los próximos avances.</p>`,
+          });
+          console.log('Correo enviado a:', emailCliente);
+        } catch (error) {
+          console.error('Error enviando correo:', error);
+        }
+      } else {
+        console.warn('No se encontró emailCliente, no se envió correo.');
+      }
+
       return reparacion;
     } catch (error) {
-      console.error('Error al crear la reparación:', error);
+      // Manejo de errores
       throw new InternalServerErrorException('Error al crear la reparación');
     }
   }

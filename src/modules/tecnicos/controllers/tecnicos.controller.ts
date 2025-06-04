@@ -9,12 +9,15 @@ import {
 } from '@nestjs/common';
 import { TecnicosService } from '../services/tecnicos.service';
 import { Tecnico } from '../entities/tecnico.entity';
+import { Auth } from '../../../auth/decorators/auth.decorator';
+import { ValidRoles } from '../../../auth/interfaces';
 
 @Controller('tecnicos')
 export class TecnicosController {
   constructor(private readonly tecnicosService: TecnicosService) {}
 
   @Post()
+  @Auth(ValidRoles.admin)
   async create(@Body() tecnicoData: Partial<Tecnico>): Promise<Tecnico> {
     return await this.tecnicosService.create(tecnicoData);
   }
@@ -30,6 +33,7 @@ export class TecnicosController {
   }
 
   @Put(':id')
+  @Auth(ValidRoles.admin)
   async update(
     @Param('id') id: number,
     @Body() updateData: Partial<Tecnico>
@@ -38,6 +42,7 @@ export class TecnicosController {
   }
 
   @Delete(':id')
+  @Auth(ValidRoles.admin)
   async remove(@Param('id') id: number): Promise<void> {
     return await this.tecnicosService.remove(id);
   }
