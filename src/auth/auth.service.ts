@@ -37,7 +37,7 @@ export class AuthService {
 
       return {
         ...user,
-        token: this.getJwtToken({ id: user.id }),
+        token: this.getJwtToken({ id: user.id, roles: user.roles }), // <-- agrega roles aquí
       };
     } catch (error) {
       this.handleDBErrors(error);
@@ -48,7 +48,7 @@ export class AuthService {
     const { password, email } = loginUserDto;
     const user = await this.userRepository.findOne({
       where: { email },
-      select: { email: true, password: true, id: true, fullName: true }, // <--- agrega fullName aquí
+      select: { email: true, password: true, id: true, fullName: true, roles: true }, // <-- agrega roles aquí
     });
 
     if (!user || !user.password) {
@@ -63,7 +63,7 @@ export class AuthService {
       id: user.id,
       email: user.email,
       fullName: user.fullName, // <--- asegúrate de incluirlo aquí
-      token: this.getJwtToken({ id: user.id }),
+      token: this.getJwtToken({ id: user.id, roles: user.roles }), // <--- agrega el rol aquí
     };
   }
 

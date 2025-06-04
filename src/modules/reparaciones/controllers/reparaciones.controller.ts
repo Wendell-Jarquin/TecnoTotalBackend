@@ -10,6 +10,8 @@ import {
 } from '@nestjs/common';
 import { ReparacionesService } from '../services/reparaciones.service';
 import { CreateReparacionDto } from '../dto/reparaciones.dto';
+import { Auth } from '../../../auth/decorators/auth.decorator';
+import { ValidRoles } from '../../../auth/interfaces';
 
 @Controller('reparaciones')
 export class ReparacionesController {
@@ -24,6 +26,7 @@ export class ReparacionesController {
   }
 
   @Post()
+  @Auth(ValidRoles.admin)
   create(@Body() createReparacionDto: CreateReparacionDto) {
     return this.reparacionesService.create(createReparacionDto);
   }
@@ -34,6 +37,7 @@ export class ReparacionesController {
   }
 
   @Patch(':id')
+  @Auth(ValidRoles.admin)
   update(
     @Param('id') id: string,
     @Body() updateData: Partial<CreateReparacionDto>
@@ -42,6 +46,7 @@ export class ReparacionesController {
   }
 
   @Delete(':id')
+  @Auth(ValidRoles.admin)
   remove(@Param('id') id: string) {
     return this.reparacionesService.remove(Number(id));
   }
