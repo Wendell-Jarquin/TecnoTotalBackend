@@ -107,4 +107,11 @@ export class ReparacionesService {
       throw error;
     }
   }
+
+  async asociarImagen(id: number, imagen: string) {
+    const reparacion = await this.findOne(id);
+    reparacion.imagen = imagen;
+    await this.reparacionRepository.save(reparacion);
+    return reparacion;
+  }
 }

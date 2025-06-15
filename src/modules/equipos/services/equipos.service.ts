@@ -31,18 +31,18 @@ export class EquiposService {
     return this.equipoRepository.find();
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     const equipo = await this.equipoRepository.findOne({ where: { id } });
     if (!equipo) throw new NotFoundException('Equipo no encontrado');
     return equipo;
   }
 
-  async update(id: number, updateEquipoDto: Partial<CreateEquipoDto>) {
+  async update(id: string, updateEquipoDto: Partial<CreateEquipoDto>) {
     await this.equipoRepository.update(id, updateEquipoDto);
     return this.findOne(id);
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     const equipo = await this.findOne(id);
     await this.equipoRepository.remove(equipo);
     return { message: 'Equipo eliminado correctamente' };

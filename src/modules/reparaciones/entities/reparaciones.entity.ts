@@ -5,7 +5,6 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { User } from '../../../auth/entities/auth.entity';
 import { Cliente } from '../../clientes/entities/cliente.entity';
 
 @Entity('reparaciones')
@@ -34,6 +33,13 @@ export class Reparacion {
   @Column({ type: 'date', nullable: true })
   fechaEntrega?: Date;
 
-  @ManyToOne(() => Cliente, (cliente) => cliente.reparaciones)
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  imagen?: string;
+
+  @ManyToOne(() => Cliente, (cliente) => cliente.reparaciones, { nullable: false, onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'clienteId', referencedColumnName: 'clientes_id' })
   cliente: Cliente;
+
+  @Column()
+  clienteId: number;
 }

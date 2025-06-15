@@ -7,7 +7,7 @@ export class MailController {
 
   @Post('send')
   async sendTestMail(
-    @Body() body: { to: string; subject: string; text: string }
+    @Body() body: { to: string; subject: string; text: string },
   ) {
     return this.mailService.sendMail(body.to, body.subject, body.text);
   }

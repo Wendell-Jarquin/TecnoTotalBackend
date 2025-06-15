@@ -18,5 +18,5 @@ export class CreateEquipoDto {
   estado: string;
 
   @IsNumber()
-  clienteId: number; 
+  clienteId: number;
 }

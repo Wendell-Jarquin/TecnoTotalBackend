@@ -1,10 +1,16 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { Cliente } from '../../clientes/entities/cliente.entity';
 
 @Entity('equipos')
 export class Equipo {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ type: 'varchar', length: 100 })
   marca: string;
@@ -18,10 +24,10 @@ export class Equipo {
   @Column({ type: 'varchar', length: 50, nullable: true })
   estado?: string;
 
-  @ManyToOne(() => Cliente, { nullable: false, onDelete: 'CASCADE' }) // <--- agrega onDelete: 'CASCADE'
+  @ManyToOne(() => Cliente, { nullable: false, onDelete: 'CASCADE' }) //onDelete cascade para eliminar todo lo relacionado
   @JoinColumn({ name: 'clienteId' })
   cliente: Cliente;
 
   @Column()
-  clienteId: number; // <--- AGREGA ESTE CAMPO
+  clienteId: number;
 }
